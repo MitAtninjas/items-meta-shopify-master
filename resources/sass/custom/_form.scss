@@ -1,0 +1,9 @@
+form {
+    label.required {
+        &:after {
+            content: '*';
+            color: #e04f1a;
+            padding-left: 5px;
+        }
+    }
+}
