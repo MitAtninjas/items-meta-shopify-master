@@ -16,6 +16,7 @@ use App\Events\StoreCreated;
 use App\Events\StoreDeleted;
 use App\Events\StoreUpdated;
 
+
 class StoreController extends Controller
 {
     public $carrierService;
