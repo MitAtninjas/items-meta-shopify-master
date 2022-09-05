@@ -145,6 +145,33 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="form-group">
+                            {!! Form::label('is_county_enable', 'Always Order From Specific Country', ['class' => 'required']) !!}
+                            <div class="form-group col-sm-8">
+                                <div class="custom-control custom-switch mb-1">
+                                    <input type="checkbox" class="custom-control-input"
+                                           name="is_county_enable"
+                                           {{ (!empty($store->is_county_enable) && $store->is_county_enable == "1") ? 'checked' : '' }}
+                                           id="is_county_enable" value='1'>
+                                    <label class="custom-control-label"
+                                           for="is_county_enable"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" id="country_list_div">
+                            {!! Form::label('country_list_label', 'Country List', ['class' => 'required']) !!}
+                            <div class="form-group col-sm-8">
+                                <div class="custom-control custom-switch mb-1">
+                                    <select id="country_list" class="form-control select2" name="country_id[]" multiple="multiple">
+                                        @foreach ($countrys as $country)
+                                            <option value="{{$country->id}}" 
+                                                {{ !empty($store->country_id) && in_array($country->id, $store->country_id) ? 'selected' : '' }}
+                                                >{{ $country->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
                 </div>
@@ -177,6 +204,22 @@
             // toggle the eye slash icon
             this.classList.toggle('fa-eye-slash');
         });
+
+        $('#country_list').select2();
+        checkCounRediobtn();
     })
+
+    $('#is_county_enable').change(function() {
+        checkCounRediobtn();
+    });
+
+    function checkCounRediobtn() {
+        
+        if( $('#is_county_enable').is(':checked') ){
+            $('#country_list_div').show();
+        }else{
+            $('#country_list_div').hide();
+        }
+    }
 </script>
 @endpush

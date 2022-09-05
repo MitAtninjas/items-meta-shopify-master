@@ -7,6 +7,7 @@ use App\Services\ShopifyApiService;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Store;
+use App\Models\CountryList;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
@@ -85,7 +86,8 @@ class StoreController extends Controller
     public function create()
     {
         $customers = User::where('role', 'Customer')->get();
-        return view('admin.stores.create', compact('customers'));
+        $countrys = CountryList::get();
+        return view('admin.stores.create', compact('customers','countrys'));
     }
 
 
@@ -135,6 +137,15 @@ class StoreController extends Controller
 
             ]);
 
+            if(isset($request->is_county_enable))
+            {
+                $country_id = implode(',', $request->country_id);
+
+                $request->merge([
+                    'country_id' => $country_id,
+                    'is_county_enable' => $request->is_county_enable,
+                ]);
+            }
             $store = Store::create($request->all());
 
            //event for store created
@@ -216,8 +227,9 @@ class StoreController extends Controller
 
 
         }
-
-        return view('admin.stores.edit', compact('customers', 'store','locationsList'));
+        $store->country_list = $store->getCountryList();
+        $countrys = CountryList::get();
+        return view('admin.stores.edit', compact('customers', 'store','locationsList', 'countrys'));
     }
 
     /**
@@ -270,6 +282,16 @@ class StoreController extends Controller
 
             //replicate store before update
             $storeOriginal = $store->replicate();
+            
+            if(isset($request->is_county_enable))
+            {
+                $country_id = implode(',', $request->country_id);
+
+                $request->merge([
+                    'country_id' => $country_id,
+                    'is_county_enable' => $request->is_county_enable,
+                ]);
+            }
 
             $store->update($request->all());
 
