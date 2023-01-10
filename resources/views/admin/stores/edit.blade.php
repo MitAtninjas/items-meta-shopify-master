@@ -78,6 +78,14 @@
                             'form-control form-control-alt']); !!}
                         </div>
                         <div class="form-group">
+                            {!! Form::label('check_orders_by', 'Check Orders By', ['class' => 'required']) !!}
+                            {!! Form::select('check_orders_by', config('constants.check_orders_by'), $store->check_orders_by, ['class' => 'form-control form-control-alt']); !!}
+                        </div>
+                        <div class="form-group orders_cron_div d-none">
+                            {!! Form::label('orders_cron', 'Orders Cron settings', ['class' => 'required']) !!}
+                            {!! Form::text('orders_cron', $store->orders_cron, ['placeholder' => '* * * * *', 'class' => 'form-control form-control-alt']); !!}
+                        </div>
+                        <div class="form-group">
                             {!! Form::label('api_version', 'API Version', ['class' => 'required']) !!}
                             {!! Form::text('api_version', $store->api_version, ['placeholder' => 'API Version',
                             'class' =>
@@ -207,7 +215,23 @@
 
         $('#country_list').select2();
         checkCounRediobtn();
+
+        $('#check_orders_by').change(function() {
+            checkOrderIsCorn();
+        });
+        checkOrderIsCorn();
     })
+
+    function checkOrderIsCorn() {
+        console.log($('#check_orders_by option:selected').val());
+        if( $('#check_orders_by option:selected').val() == "cron" ){
+            // $('.orders_cron_div').show();
+            $(".orders_cron_div").removeClass("d-none");
+        }else{
+            // $('.orders_cron_div').hide();
+            $(".orders_cron_div").addClass("d-none");
+        }
+    }
 
     $('#is_county_enable').change(function() {
         checkCounRediobtn();

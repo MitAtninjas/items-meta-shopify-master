@@ -68,6 +68,14 @@
                             'form-control form-control-alt']); !!}
                         </div>
                         <div class="form-group">
+                            {!! Form::label('check_orders_by', 'Check Orders By', ['class' => 'required']) !!}
+                            {!! Form::select('check_orders_by', config('constants.check_orders_by'), null, ['class' => 'form-control form-control-alt']); !!}
+                        </div>
+                        <div class="form-group orders_cron_div d-none">
+                            {!! Form::label('orders_cron', 'Orders Cron settings', ['class' => 'required']) !!}
+                            {!! Form::text('orders_cron', '', ['placeholder' => '* * * * *', 'class' => 'form-control form-control-alt']); !!}
+                        </div>
+                        <div class="form-group">
                             {!! Form::label('api_version', 'API Version', ['class' => 'required']) !!}
                             {!! Form::text('api_version', '', ['placeholder' => 'API Versions', 'class' =>
                             'form-control form-control-alt']); !!}
@@ -159,14 +167,29 @@
 <script src="{{ asset('js/plugins/select2/js/select2.full.min.js') }}"></script>
 <script type="text/javascript">
     jQuery(document).ready(function(){
-         jQuery('#customer_id').select2({
+        jQuery('#customer_id').select2({
             placeholder: 'Select Customer'
         });
 
         $('#country_list').select2();
         checkCounRediobtn();
 
+        $('#check_orders_by').change(function() {
+            checkOrderIsCorn();
+        });
+        // checkOrderIsCorn();
     })
+
+    function checkOrderIsCorn() {
+        console.log($('#check_orders_by option:selected').val());
+        if( $('#check_orders_by option:selected').val() == "cron" ){
+            // $('.orders_cron_div').show();
+            $(".orders_cron_div").removeClass("d-none");
+        }else{
+            // $('.orders_cron_div').hide();
+            $(".orders_cron_div").addClass("d-none");
+        }
+    }
 
     $('#is_county_enable').change(function() {
         checkCounRediobtn();

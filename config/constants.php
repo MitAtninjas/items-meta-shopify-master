@@ -99,6 +99,10 @@ return [
         "advanced" => "Advanced",
         "plus" => "Plus"
     ],
+    "check_orders_by" => [
+        "webhook" => "Webhook",
+        "cron" => "Cron"
+    ],
     "use_sandbox"=>[
         '1'=>"Yes",
         "0"=>"No"

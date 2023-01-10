@@ -114,6 +114,10 @@ class StoreController extends Controller
             'api_version' => 'required|string|max:255',
 
         ];
+        
+        if(!empty($request->check_orders_by) && $request->check_orders_by == "cron"){
+            $rules['orders_cron'] = ['required' ,'regex:/^(\*|([0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9])|\*\/([0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9])) (\*|([0-9]|1[0-9]|2[0-3])|\*\/([0-9]|1[0-9]|2[0-3])) (\*|([1-9]|1[0-9]|2[0-9]|3[0-1])|\*\/([1-9]|1[0-9]|2[0-9]|3[0-1])) (\*|([1-9]|1[0-2])|\*\/([1-9]|1[0-2])) (\*|([0-6])|\*\/([0-6]))$/'];
+        }
 
         $customMessages = [
             'regex' => 'The :attribute field should be valid shopify store url.'
@@ -148,9 +152,10 @@ class StoreController extends Controller
             }
             $store = Store::create($request->all());
 
-           //event for store created
-            event(new StoreCreated($store));
-
+            if(!empty($request->check_orders_by) && $request->check_orders_by == "weebhook"){
+                //event for store created
+                event(new StoreCreated($store));
+            }
             DB::commit();
 
             return ['response' => 1, 'msg' => 'Store created successfully', 'redirect' => route('admin.stores.index')];
@@ -257,7 +262,10 @@ class StoreController extends Controller
 
 
         ];
-
+        
+        if(!empty($request->check_orders_by) && $request->check_orders_by == "cron"){
+            $rules['orders_cron'] = ['required' ,'regex:/^(\*|([0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9])|\*\/([0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9])) (\*|([0-9]|1[0-9]|2[0-3])|\*\/([0-9]|1[0-9]|2[0-3])) (\*|([1-9]|1[0-9]|2[0-9]|3[0-1])|\*\/([1-9]|1[0-9]|2[0-9]|3[0-1])) (\*|([1-9]|1[0-2])|\*\/([1-9]|1[0-2])) (\*|([0-6])|\*\/([0-6]))$/'];
+        }
         $customMessages = [
             'regex' => 'The :attribute field should be valid shopify store url.'
         ];
@@ -298,12 +306,13 @@ class StoreController extends Controller
 
 
             //
-
-
+            if(!empty($request->check_orders_by) && $request->check_orders_by == "weebhook"){
+                //event for store updated
+                event(new StoreUpdated($store, $storeOriginal));
+            }else{
+                event(new StoreDeleted($store));
+            }
             DB::commit();
-
-            //event for store updated
-            event(new StoreUpdated($store, $storeOriginal));
 
             return ['response' => 1, 'msg' => 'Store updated successfully', 'redirect' => route('admin.stores.index')];
         } catch (\Throwable $e) {

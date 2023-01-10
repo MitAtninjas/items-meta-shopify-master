@@ -65,25 +65,25 @@ class Processorders extends Command
         try{
 			
 			foreach($orders as $order) {
-				echo $order['created_at'];
+				\Log::info($order['created_at']);
 				$orderDate = strtotime($order['created_at']);
 				$checkDate = strtotime('-2 day');
 				//var_dump($order);
-				echo 'order date'.date('Y-m-d',$orderDate);
-				echo 'check date'.date('Y-m-d',$checkDate);
-				echo '**'.$orderDate;
-				echo '**'.$checkDate;
+				\Log::info('order date'.date('Y-m-d',$orderDate));
+				\Log::info('check date'.date('Y-m-d',$checkDate));
+				\Log::info('**'.$orderDate);
+				\Log::info('**'.$checkDate);
 				
 				if($orderDate <= $checkDate)
 					continue;
 				
-				echo '------';
+				\Log::info('------');
 				
 				
 				
 				
 				$orderId = $order['id'];
-				echo $orderId.'----';
+				\Log::info($orderId.'----');
 				$existingMeta = $shopifyApiService->getResourceById('orders',$orderId.'/metafields');
 				
 				$metafieldsArray = $existingMeta->json();
@@ -146,10 +146,10 @@ class Processorders extends Command
 
 						$this->orderService = new OrderService($store);
 						$orderUpdated = $this->orderService->createOrderMeta($orderId, $metaField);
-						echo '***Order Updated'.$orderId.'****';
+						\Log::info('***Order Updated'.$orderId.'****');
 						\Log::info('Order Updated'.$orderId);
 					}else {
-						echo '***Order Not Updated'.$orderId.'****';
+						\Log::info('***Order Not Updated'.$orderId.'****');
 						\Log::info('Order Not Updated. No Meta. Order'.$orderId);
 
 					}
@@ -162,8 +162,8 @@ class Processorders extends Command
 				
 			}
 			
-			var_dump();
-			die();
+			// var_dump();
+			// die();
 
 
 
@@ -176,7 +176,7 @@ class Processorders extends Command
 
         }
 
-		echo 'done';
+		\Log::info('done');
         \Log::info('Order Update Complete');
 
 
