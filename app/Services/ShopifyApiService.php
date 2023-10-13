@@ -71,9 +71,9 @@ class ShopifyApiService
      * @param Response $response
      * @return mixed
      */
-    public function sendResponse(Response $response)
+    public function sendResponse(Response $response, $getError = 0)
     {
-        if ($response->successful()) {
+        if ($response->successful() || $getError == 1) {
             return $response;
         } else {
             Log::info($response->throw()->json());
@@ -183,7 +183,7 @@ class ShopifyApiService
      * @param string $resourceName
      * @return object
      */
-    public function getResourceList($resourceName)
+    public function getResourceList($resourceName, $getError = 0)
     {
         $getResourceUrl = $this->baseUrl . "/" . $resourceName . ".json";
 
@@ -197,7 +197,7 @@ class ShopifyApiService
 
         }
 
-        return $this->sendResponse($getResourceResponse);
+        return $this->sendResponse($getResourceResponse, $getError);
     }
 
     /**
